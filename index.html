@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>PetroVálvulas 2026</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="manifest" href="manifest.json">
+    <style>
+        :root {
+            --verde-logo: #00843d;
+            --amarelo-logo: #ffcc00;
+            --bg: #f4f7f6;
+            --texto: #1d1d1b;
+        }
+        
+        * { box-sizing: border-box; touch-action: manipulation; }
+        
+        body { 
+            margin: 0; 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
+            background: var(--bg); 
+            color: var(--texto);
+            padding-bottom: 40px;
+        }
+
+        header {
+            background: #ffffff;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            border-bottom: 4px solid var(--verde-logo);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo-img {
+            max-width: 200px;
+            height: auto;
+            display: block;
+        }
+
+        main { padding: 15px; }
+
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--verde-logo);
+        }
+
+        /* Estilo para destacar os cards das válvulas */
+        .val {
+            border-left: 5px solid var(--amarelo-logo) !important;
+            background: #fdfdfd;
+        }
+
+        h4 { margin: 0 0 15px 0; color: var(--verde-logo); text-transform: uppercase; font-size: 14px; letter-spacing: 1px; }
+
+        label { display: block; font-size: 11px; font-weight: 700; margin-bottom: 5px; color: #555; text-transform: uppercase; }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            background: #fff !important;
+            color: #000 !important;
+        }
+
+        .btn {
+            background: var(--verde-logo);
+            color: #fff;
+            border: 0;
+            padding: 18px;
+            width: 100%;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 4px 0 #005a2a;
+        }
+
+        #status-sync {
+            display: none;
+            background: var(--amarelo-logo);
+            color: #000;
+            text-align: center;
+            padding: 8px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        @media (max-width: 600px) { .grid { grid-template-columns: 1fr 1fr; } } /* Mantém 2 colunas no mobile para campos curtos */
+        
+        #poco_id { text-transform: uppercase; }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="./Petrovalvula.png.png" alt="PetroVálvulas" class="logo-img">
+</header>
+
+<div id="status-sync">⬆ SINCRONIZANDO COM A PLANILHA...</div>
+
+<main>
+    <div class="card">
+        <h4>Dados do Poço</h4>
+        <label>Nome do Poço</label>
+        <input type="text" id="poco_id" placeholder="Ex: RJS-01">
+        
+        <div class="grid">
+            <div>
+                <label>Data</label>
+                <input type="date" id="data_visita">
+            </div>
+            <div>
+                <label>Qtd Válvulas</label>
+                <input type="number" id="qtd_valvulas" placeholder="0" oninput="render()">
+            </div>
+        </div>
+
+        <label>Status do Poço</label>
+        <select id="status_poco">
+            <option>Produzindo</option>
+            <option>Injetando</option>
+            <option>Abandono temporário</option>
+            <option>Abandono Permanente</option>
+            <option>Operando para capitação</option>
+            <option>Fechado</option>
+            <option>N/A</option>
+            <option>ND</option>
+            <option>Sem acesso</option>
+        </select>
+
+        <label>Observações Gerais</label>
+        <textarea id="desc_geral" rows="2" placeholder="Notas sobre o poço..."></textarea>
+    </div>
+
+    <div id="cont"></div>
+
+    <button class="btn" onclick="save()">Salvar e Enviar</button>
+</main>
+
+<script>
+    document.getElementById('data_visita').valueAsDate = new Date();
+
+    function render() {
+        const n = document.getElementById('qtd_valvulas').value;
+        const cont = document.getElementById('cont');
+        cont.innerHTML = '';
+        for (let i = 1; i <= n; i++) {
+            cont.innerHTML += `
+            <div class="card val">
+                <h4>Válvula ${i}</h4>
+                <label>Local</label>
+                <select class="v-loc">
+                    <option>Pistoneio</option><option>Cabeça</option><option>Mestra</option>
+                    <option>Mestra Cima</option><option>Mestra Baixo</option>
+                    <option>Anular A</option><option>Anular B</option><option>Anular C</option><option>ND</option>
+                </select>
+                
+                <div class="grid">
+                    <div>
+                        <label>Diâmetro</label>
+                        <select class="v-dia">
+                            <option>1/2"</option><option>1"</option><option>2"</option><option>2 1/16"</option>
+                            <option>2 9/16"</option><option>3 1/8"</option><option>4 1/16"</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Classe (PSI)</label>
+                        <select class="v-pres">
+                            <option>300 PSI</option><option>800 PSI</option><option>1.000 PSI</option><option>1.500 PSI</option><option>2.000 PSI</option><option>2.500 PSI</option><option>3.000 PSI</option><option>5.000 PSI</option>
+                            <option>6.000 PSI</option><option>10.000 PSI</option><option>3.000 LBS</option><option>1.500 LBS</option><option>ND</option>
+                        </select>
+                    </div>
+                </div>
+
+                <label>Fabricante / Nº Série</label>
+                <div class="grid">
+                    <input type="text" class="v-fab" placeholder="Fabr.">
+                    <input type="text" class="v-ser" placeholder="Série">
+                </div>
+                
+                <label>Status</label>
+                <select class="v-st"><option>Aberta</option><option>Fechada</option></select>
+            </div>`;
+        }
+    }
+
+    function save() {
+        const d = {
+            p: document.getElementById('poco_id').value.toUpperCase(),
+            dt: document.getElementById('data_visita').value,
+            stP: document.getElementById('status_poco').value,
+            desc: document.getElementById('desc_geral').value,
+            vs: Array.from(document.querySelectorAll('.val')).map(v => ({
+                l: v.querySelector('.v-loc').value,
+                d: v.querySelector('.v-dia').value,
+                pres: v.querySelector('.v-pres').value, // NOVA CLASSE DE PRESSÃO
+                f: v.querySelector('.v-fab').value,
+                s: v.querySelector('.v-ser').value,
+                st: v.querySelector('.v-st').value
+            }))
+        };
+        
+        let f = JSON.parse(localStorage.getItem('f_v') || '[]');
+        f.push(d);
+        localStorage.setItem('f_v', JSON.stringify(f));
+        alert('Dados salvos no dispositivo!');
+        sync();
+    }
+
+    async function sync() {
+        if (!navigator.onLine) return;
+        let f = JSON.parse(localStorage.getItem('f_v') || '[]');
+        if (!f.length) return;
+        document.getElementById('status-sync').style.display = 'block';
+        
+        for (let i = f.length - 1; i >= 0; i--) {
+            try {
+                await fetch('https://script.google.com/macros/s/AKfycbzMdhVhSjsSHPOEcVLrkOk9wCVX9FkwGFMKTM4RK4Uo5Mj0yuJ6rr9Oxj2-Xs0XF0-ZMg/exec', {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify(f[i])
+                });
+                f.splice(i, 1);
+            } catch (e) { console.log('Erro na rede'); }
+        }
+        localStorage.setItem('f_v', JSON.stringify(f));
+        document.getElementById('status-sync').style.display = 'none';
+    }
+    window.onload = sync;
+</script>
+</body>
+</html>
