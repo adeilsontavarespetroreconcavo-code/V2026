@@ -1,4 +1,28 @@
-<!DOCTYPE html>
+function save() {
+        const d = {
+            p: document.getElementById('poco_id').value.toUpperCase(),
+            dt: document.getElementById('data_visita').value,
+            stP: document.getElementById('status_poco').value,
+            // 2. ADICIONE ESTA LINHA ABAIXO PARA CAPTURAR O MÉTODO
+            met: document.getElementById('metodo_elevacao').value, 
+            desc: document.getElementById('desc_geral').value,
+            vs: Array.from(document.querySelectorAll('.val')).map(v => ({
+                l: v.querySelector('.v-loc').value,
+                t: v.querySelector('.v-tip').value,
+                d: v.querySelector('.v-dia').value,
+                pres: v.querySelector('.v-pres').value,
+                f: v.querySelector('.v-fab').value,
+                s: v.querySelector('.v-ser').value,
+                st: v.querySelector('.v-st').value
+            }))
+        };
+        
+        let f = JSON.parse(localStorage.getItem('f_v') || '[]');
+        f.push(d);
+        localStorage.setItem('f_v', JSON.stringify(f));
+        alert('Dados salvos no dispositivo!');
+        sync();
+    }<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -278,3 +302,4 @@
 </script>
 </body>
 </html>
+
