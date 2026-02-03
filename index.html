@@ -1,28 +1,4 @@
-function save() {
-        const d = {
-            p: document.getElementById('poco_id').value.toUpperCase(),
-            dt: document.getElementById('data_visita').value,
-            stP: document.getElementById('status_poco').value,
-            // 2. ADICIONE ESTA LINHA ABAIXO PARA CAPTURAR O MÉTODO
-            met: document.getElementById('metodo_elevacao').value, 
-            desc: document.getElementById('desc_geral').value,
-            vs: Array.from(document.querySelectorAll('.val')).map(v => ({
-                l: v.querySelector('.v-loc').value,
-                t: v.querySelector('.v-tip').value,
-                d: v.querySelector('.v-dia').value,
-                pres: v.querySelector('.v-pres').value,
-                f: v.querySelector('.v-fab').value,
-                s: v.querySelector('.v-ser').value,
-                st: v.querySelector('.v-st').value
-            }))
-        };
-        
-        let f = JSON.parse(localStorage.getItem('f_v') || '[]');
-        f.push(d);
-        localStorage.setItem('f_v', JSON.stringify(f));
-        alert('Dados salvos no dispositivo!');
-        sync();
-    }<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -254,11 +230,13 @@ function save() {
         }
     }
 
-    function save() {
+   function save() {
         const d = {
             p: document.getElementById('poco_id').value.toUpperCase(),
             dt: document.getElementById('data_visita').value,
             stP: document.getElementById('status_poco').value,
+            // 2. ADICIONE ESTA LINHA ABAIXO PARA CAPTURAR O MÉTODO
+            met: document.getElementById('metodo_elevacao').value, 
             desc: document.getElementById('desc_geral').value,
             vs: Array.from(document.querySelectorAll('.val')).map(v => ({
                 l: v.querySelector('.v-loc').value,
@@ -287,7 +265,7 @@ function save() {
         for (let i = f.length - 1; i >= 0; i--) {
             try {
                 // VERIFIQUE SE ESTE LINK DO GOOGLE SCRIPT ESTÁ ATUALIZADO
-                await fetch('https://script.google.com/macros/s/AKfycbxEbQO_kIMHI8ekakjxTrwEVTxAvAjjxa1L0z9TAJDZul0IQHpUPE2O9ptxoSjwhZS2LA/exec', {
+                await fetch('https://script.google.com/macros/s/AKfycbwW7cNwPrM6PWhSgtvyybZbR_BWZ1ADYeuDVc7gfjCuegYofe4BLoZVAFxa4BV4APlwNA/exec', {
                     method: 'POST',
                     mode: 'no-cors',
                     body: JSON.stringify(f[i])
@@ -302,4 +280,3 @@ function save() {
 </script>
 </body>
 </html>
-
