@@ -3,16 +3,16 @@
   "name": "PetroVálvulas 2026",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/805/805561.png",
+      "src": "./Petrovalvula.png.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     }
   ],
-  "start_url": "./index.html",
+  "start_url": "index.html",
   "display": "standalone",
-  "theme_color": "#1f2d3d",
-  "background_color": "#f0f2f5",
+  "theme_color": "#00843d",
+  "background_color": "#f4f7f6",
   "orientation": "portrait",
   "scope": "./"
 }
